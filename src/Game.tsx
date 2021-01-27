@@ -1,6 +1,8 @@
 import React, { useEffect, useRef } from "react";
 
-import { makeStyles, Typography } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core";
+
+import { canvasSetup } from "./render";
 
 const useStyles = makeStyles({
     canvas: {
@@ -19,109 +21,68 @@ const useStyles = makeStyles({
         color: "yellow",
         zIndex: 5
     }
-})
+});
 
 interface ComponentProps {
 }
 
 let Game: React.FC<ComponentProps> = () => {
     const classes = useStyles();
-    
-    const canvasRef = useRef<HTMLCanvasElement>(null);
-    const fpsRef = useRef<HTMLElement>(null);
+
+    const canvasContainerRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        const gameController = new GameController(canvasRef.current!);
-        const { canvasEl, ctx } = gameController;
-        const resizeListener = () => {
-            canvasEl.width = window.innerWidth;
-            canvasEl.height = window.innerHeight;
-        }
-        resizeListener();
-        
-        let framesRendered = 0;
-        const draw = () => {
-            ctx.clearRect(0, 0, canvasEl.width, canvasEl.height);
-            // DRAW BACKGROUND
-            gameController.render();
-            framesRendered++;
-            requestAnimationFrame(draw);
-        };
-        draw();
-
-        const fpsInterval = setInterval(() => {
-            fpsRef.current!.innerText = framesRendered.toString();
-            framesRendered = 0;
-        }, 1000)
-        
-        window.addEventListener("resize", resizeListener)
-        window.addEventListener("keydown",(event)=>{
-            switch(event.code.toLowerCase()) {
-                case "space":
-                    
-            }
-        })
-        return () => {
-            clearInterval(fpsInterval);
-            window.removeEventListener("resize", resizeListener)
-        }
-    }, [])
+        return canvasSetup(canvasContainerRef.current!);
+    }, []);
     
+    // useEffect(() => {
+    //     const canvasEl = canvasRef.current!;
+    //     const gameController = new GameController(canvasEl.getContext("2d")!, 1);
+    //     const resizeListener = () => {
+    //         canvasEl.width = window.innerWidth;
+    //         canvasEl.height = window.innerHeight;
+    //     };
+    //     resizeListener();
+
+    //     let framesRendered = 0;
+    //     const draw = () => {
+    //         gameController.render();
+    //         framesRendered++;
+    //         requestAnimationFrame(draw);
+    //     };
+    //     draw();
+
+    //     const fpsInterval = setInterval(() => {
+    //         fpsRef.current!.innerText = framesRendered.toString();
+    //         framesRendered = 0;
+    //     }, 1000);
+    //     const updateInterval = setInterval(() => {
+    //         gameController.updateTick();
+    //     }, 8);
+
+    //     const keydownListener = (event: KeyboardEvent) => {
+    //         switch (event.code.toLowerCase()) {
+    //         case "space":
+    //             gameController.switchBallDirection(0);
+    //         }
+    //     };
+
+    //     window.addEventListener("resize", resizeListener);
+    //     window.addEventListener("keydown", keydownListener);
+    //     return () => {
+    //         clearInterval(fpsInterval);
+    //         clearInterval(updateInterval);
+    //         window.removeEventListener("resize", resizeListener);
+    //         window.removeEventListener("keydown", keydownListener);
+    //     };
+    // }, []);
+
     return <>
-        <Typography ref={fpsRef} variant="button" className={classes.fpsCounter}>0<small>fps</small></Typography>
-        <canvas ref={canvasRef} className={classes.canvas} />
+        {/* <Typography ref={fpsRef} variant="button" className={classes.fpsCounter}>0<small>fps</small></Typography> */}
+        <div ref={canvasContainerRef} />
     </>;
-}
+};
 
-class GameController {
-    public ballPosition: "start" | "bottom" = "start";
-    
-    public config = {
-        platforms: {
-            yPerc: [0.2, 0.8],
-            height: 20
-        },
-        ballRadius: 50
-    };
-    
-    constructor(
-        public canvasEl: HTMLCanvasElement, 
-        public ctx = canvasEl.getContext("2d")!
-    ) {}
 
-    render() {
-        // процентные значения
-        // DRAW PLATFORMS
-        const { yPerc, height } = this.config.platforms;
-        yPerc.forEach(yPerc => {
-            this.drawPlatform(yPerc);
-        });
-
-        const onTop = true;
-        this.drawBall(
-            50,
-            onTop ? 
-                yPerc[0] * this.canvasEl.height + height + this.config.ballRadius : 
-                yPerc[1] * this.canvasEl.height - this.config.ballRadius
-            );
-    }
-
-    drawPlatform(yPerc: number) {
-        const { ctx, canvasEl } = this;
-        const yPx = yPerc * canvasEl.height;
-        ctx.fillStyle = "brown";
-        ctx.fillRect(0, yPx, canvasEl.width, 20);
-    }
-
-    drawBall(x: number, y: number) {
-        const { ctx } = this;
-
-        ctx.fillStyle = "lime";
-        
-        ctx.arc(x, y, this.config.ballRadius, 0, Math.PI * 2);
-        
-        ctx.fill();
-    }
-}
 
 export default Game;
