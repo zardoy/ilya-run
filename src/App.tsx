@@ -1,8 +1,12 @@
+import { CssBaseline } from '@material-ui/core';
 import React from 'react';
 import Game from './Game';
 
 function App() {
-  return <Game />;
+    return <>
+        <CssBaseline />
+        <Game />
+  </>;
 }
 
 export default App;

@@ -2,10 +2,10 @@ import React, { useEffect, useRef } from "react";
 
 import { makeStyles } from "@material-ui/core";
 
-import { canvasSetup } from "./render";
+import { phaserSetup } from "./render";
 
 const useStyles = makeStyles({
-    canvas: {
+    canvasContainer: {
         position: "fixed",
         top: 0,
         left: 0,
@@ -32,7 +32,7 @@ let Game: React.FC<ComponentProps> = () => {
     const canvasContainerRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        return canvasSetup(canvasContainerRef.current!);
+        return phaserSetup(canvasContainerRef.current!);
     }, []);
     
     // useEffect(() => {
@@ -79,7 +79,10 @@ let Game: React.FC<ComponentProps> = () => {
 
     return <>
         {/* <Typography ref={fpsRef} variant="button" className={classes.fpsCounter}>0<small>fps</small></Typography> */}
-        <div ref={canvasContainerRef} />
+        <div
+            className={classes.canvasContainer}
+            ref={canvasContainerRef}
+        />
     </>;
 };
 

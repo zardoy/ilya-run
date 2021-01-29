@@ -4,6 +4,8 @@ import App from "./App";
 
 // window.location.reload();
 
+console.clear();
+
 ReactDOM.render(
     <App />,
     document.getElementById("root")
