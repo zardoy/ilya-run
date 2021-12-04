@@ -1,40 +1,22 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef } from 'react'
 
-import { makeStyles } from "@material-ui/core";
+import { phaserSetup } from './render'
 
-import { phaserSetup } from "./render";
+// position: "fixed",
+//         top: 0,
+//         left: 0,
+//         color: "yellow",
+//         zIndex: 5
 
-const useStyles = makeStyles({
-    canvasContainer: {
-        position: "fixed",
-        top: 0,
-        left: 0,
-        width: "100%",
-        height: "100%",
-        overflow: "hidden",
-        background: "black"
-    },
-    fpsCounter: {
-        position: "fixed",
-        top: 0,
-        left: 0,
-        color: "yellow",
-        zIndex: 5
-    }
-});
-
-interface ComponentProps {
-}
+interface ComponentProps {}
 
 let Game: React.FC<ComponentProps> = () => {
-    const classes = useStyles();
-
-    const canvasContainerRef = useRef<HTMLDivElement>(null);
+    const canvasContainerRef = useRef<HTMLDivElement>(null)
 
     useEffect(() => {
-        return phaserSetup(canvasContainerRef.current!);
-    }, []);
-    
+        return phaserSetup(canvasContainerRef.current!)
+    }, [])
+
     // useEffect(() => {
     //     const canvasEl = canvasRef.current!;
     //     const gameController = new GameController(canvasEl.getContext("2d")!, 1);
@@ -77,15 +59,23 @@ let Game: React.FC<ComponentProps> = () => {
     //     };
     // }, []);
 
-    return <>
-        {/* <Typography ref={fpsRef} variant="button" className={classes.fpsCounter}>0<small>fps</small></Typography> */}
-        <div
-            className={classes.canvasContainer}
-            ref={canvasContainerRef}
-        />
-    </>;
-};
+    return (
+        <>
+            {/* <Typography ref={fpsRef} variant="button" className={classes.fpsCounter}>0<small>fps</small></Typography> */}
+            <div
+                ref={canvasContainerRef}
+                style={{
+                    position: 'fixed',
+                    top: 0,
+                    left: 0,
+                    width: '100%',
+                    height: '100%',
+                    overflow: 'hidden',
+                    background: 'black',
+                }}
+            />
+        </>
+    )
+}
 
-
-
-export default Game;
+export default Game
